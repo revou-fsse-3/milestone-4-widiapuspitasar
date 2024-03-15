@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking App Dashboard</title>
+    <style>
+        /* CSS styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .account-summary {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .transaction-options {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        footer {
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Your Banking Dashboard</h1>
+    </header>
+    <div class="container">
+        <div class="account-summary">
+            <h2>Account Summary</h2>
+            <p><strong>Username:</strong> <span id="username">{{ current_user.username }}</span> <button onclick="editUsername()">Edit</button></p>
+            <p><strong>Email:</strong> <span id="email">{{ current_user.email }}</span> <button onclick="editEmail()">Edit</button></p>
+            <!-- You can include more account information here -->
+        </div>
+        <div id="editUsernameForm" style="display:none;">
+            <form action="/update_username" method="POST">
+                <input type="text" name="new_username" placeholder="New Username">
+                <button type="submit">Update</button>
+            </form>
+        </div>
+        
+        <div id="editEmailForm" style="display:none;">
+            <form action="/update_email" method="POST">
+                <input type="email" name="new_email" placeholder="New Email">
+                <button type="submit">Update</button>
+            </form>
+        </div>
+        <div class="transaction-options">
+            <h2>Transaction Options</h2>
+            <button onclick="window.location.href='/deposit'">Deposit</button>
+            <button onclick="window.location.href='/withdraw'">Withdraw</button>
+            <button onclick="window.location.href='/transfer'">Transfer</button>
+            <button onclick="window.location.href='/edit-profile'">Edit Profile</button>
+            <!-- You can include more transaction options here -->
+        </div>
+    </div>
+    <footer>
+        <p>© 2024 Your Bank. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function editUsername() {
+            var editUsernameForm = document.getElementById("editUsernameForm");
+            var editEmailForm = document.getElementById("editEmailForm");
+            editUsernameForm.style.display = "block";
+            editEmailForm.style.display = "none";
+        }
+
+        function editEmail() {
+            var editUsernameForm = document.getElementById("editUsernameForm");
+            var editEmailForm = document.getElementById("editEmailForm");
+            editUsernameForm.style.display = "none";
+            editEmailForm.style.display = "block";
+        }
+    </script>
+</body>
+</html>

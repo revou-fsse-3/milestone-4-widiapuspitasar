@@ -1,1 +1,59 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/TId9PLV9)
+# Secure and Intuitive Flask API for Banking Application
+
+This project aims to create a secure and intuitive Flask API for a banking application. The API offers features for account management, transactions, security protocols, and user authentication. 
+
+## Key Features
+
+### User Management:
+- **POST /users:** Create a new user account.
+- **GET /users/id:** Retrieve the profile of the currently authenticated user.
+- **PUT /users/id:** Update the profile information of the currently authenticated user.
+
+### Account Management:
+- **GET /accounts:** Retrieve a list of all accounts belonging to the currently authenticated user.
+- **GET /accounts/:id:** Retrieve details of a specific account by its ID. (Authorization required for account owner)
+- **POST /accounts:** Create a new account for the currently authenticated user.
+- **PUT /accounts/:id:** Update details of an existing account. (Authorization required for account owner)
+- **DELETE /accounts/:id:** Delete an account. (Authorization required for account owner)
+
+### Transaction Management:
+- **GET /transactions:** Retrieve a list of all transactions for the currently authenticated user's accounts. (Optional: filter by account ID, date range)
+- **GET /transactions/:id:** Retrieve details of a specific transaction by its ID. (Authorization required for related account owner)
+- **POST /transactions:** Initiate a new transaction (deposit, withdrawal, or transfer). (Authorization required for related account owner)
+
+## Tables
+
+### Users:
+- id (INT, Primary Key): Unique identifier for the user.
+- username (VARCHAR(255), Unique): Username for login.
+- email (VARCHAR(255), Unique): User's email address.
+- password_hash (VARCHAR(255)): Securely hashed user password.
+- created_at (DATETIME): Timestamp of user creation.
+- updated_at (DATETIME): Timestamp of user information update.
+
+### Accounts:
+- id (INT, Primary Key): Unique identifier for the account.
+- user_id (INT, Foreign Key references Users.id): User associated with the account.
+- account_type (VARCHAR(255)): Type of account (e.g., checking, savings).
+- account_number (VARCHAR(255), Unique): Unique account number.
+- balance (DECIMAL(10, 2)): Current balance of the account.
+- created_at (DATETIME): Timestamp of account creation.
+- updated_at (DATETIME): Timestamp of account information update.
+
+### Transactions:
+- id (INT, Primary Key): Unique identifier for the transaction.
+- from_account_id (INT, Foreign Key references Accounts.id): Account initiating the transaction (optional for transfers).
+- to_account_id (INT, Foreign Key references Accounts.id): Account receiving the transaction (optional for deposits).
+- amount (DECIMAL(10, 2)): Transaction amount.
+- type (VARCHAR(255)): Type of transaction (e.g., deposit, withdrawal, transfer).
+- description (VARCHAR(255)): Optional description of the transaction.
+- created_at (DATETIME): Timestamp of transaction creation.
+
+## Additional Notes
+
+- Implement appropriate error handling and validation for each endpoint.
+- Use HTTP status codes to indicate success, failure, or specific error conditions.
+- Ensure secure transaction processing and user authentication.
+- Consider implementing additional features such as budget management, bill payments, and investment management for advanced functionality.
+
+
