@@ -17,12 +17,23 @@ def users_register():
 def users_login():
     return render_template("user/login.html")
 
+@users_routes.route("/login/banking", methods=['GET'])
+def users_login_bank():
+    return render_template("user/banking.html")
+
 @users_routes.route("/register", methods=['POST'])
 def do_registration():
 
     username = request.form['username']
     email = request.form['email']
     password = request.form['password']
+
+    if not username or not email or not password:
+            return api_response(
+                status_code=400,
+                message="Incomplete data",
+                data={}
+            )
     
     print(f"Username: {username}, Email: {email}, Password Hash: {password}")
     NewUser = User(username=username, email=email)
@@ -49,31 +60,49 @@ def do_registration():
                 "username": NewUser.username,
                 "email": NewUser.email
             }
-        )  
+        )
 
 @users_routes.route("/login", methods=['POST'])
 def do_user_login():
-    
-    connection = engine.connect()
-    Session = sessionmaker(connection)
-    session = Session()
-
     try:
-        users = session.query(User).filter(User.email==request.form['email']).first()
+        email = request.form['email']
+        password = request.form['password']
 
-        if users == None:
-            return {"message" : "Email not registered"}
-        
+        connection = engine.connect()
+        Session = sessionmaker(connection)
+        session = Session()
 
-        if not users.check_password(request.form['password']):
-            return {"message" : "Password Salah"}
+        users = session.query(User).filter(User.email == email).first()
+
+        if users is None:
+            return api_response(
+                status_code=404,
+                message="Email not found",
+                data={}
+            )
+
+        if not users.check_password(password):
+            return api_response(
+                status_code=401,
+                message="Password wrong",
+                data={}
+            )
 
         login_user(users, remember=False)
-
-        return {"message" : "Login berhasil"}
-
+        # return redirect('/login/banking')
+        return api_response(
+            status_code=200,
+            message="Login Succsesfully",
+            data={"user": users.serialize(full=False)}
+        )
     except Exception as e:
-        return { "message" : "Login Failed"}
+        return api_response(
+            status_code=500,
+            message=str(e),
+            data={}
+        )
+    finally:
+        session.close()
 
 
 @users_routes.route("/login", methods=['GET'])
@@ -131,52 +160,7 @@ def get_user_by_id(user_id):
     finally:
         session.close()
 
-@users_routes.route("/login/<int:user_id>", methods=['GET'])
-@login_required
-def update_user_by_id(user_id):
-    connection = engine.connect()
-    Session = sessionmaker(connection)
-    session = Session()
-    session.begin()
 
-    try:
-        user_to_update = session.query(User).filter(User.id == user_id).first()
-
-        if not user_to_update:
-            return api_response(
-                status_code=404,
-                message="User not found",
-                data={}
-            )
-
-        user_to_update.username = request.form.get('username', user_to_update.username)
-        user_to_update.email = request.form.get('email', user_to_update.email)
-        new_password = request.form.get('password')
-        if new_password:
-            user_to_update.set_password(new_password)
-        user_to_update.updated_at = func.now()
-
-        session.commit()
-        
-        return api_response(
-            status_code=201,
-            message="User data has been updated successfully",
-            data={
-                "username": user_to_update.username,
-                "email": user_to_update.email,
-                "password": new_password
-            }
-        )    
-    except Exception as e:
-        session.rollback()
-        return api_response(
-            status_code=500,
-            message=str(e),
-            data={}
-        )
-    
-    finally:
-        session.close()
     
 @users_routes.route("/logout", methods=['GET'])
 def do_user_logout():
@@ -188,50 +172,6 @@ def user_banking():
     return render_template("user/banking.html", current_user=current_user)
 
 
-
-@users_routes.route("/update_username", methods=['POST'])
-def update_username():
-    if current_user.is_authenticated:
-        new_username = request.form['new_username']
-        current_user.username = new_username
-        connection = engine.connect()
-        Session = sessionmaker(bind=connection)
-        session = Session()
-
-        try:
-            session.merge(current_user)  
-            session.commit()
-        except Exception as e:
-            session.rollback()
-            print(f"Error updating username: {e}")
-            return {"message": "Error updating username"}
-
-        session.close()  
-        return redirect('/banking')
-    else:
-        return {"message": "Unauthorized"}
-
-@users_routes.route("/update_email", methods=['POST'])
-def update_email():
-    if current_user.is_authenticated:
-        new_email = request.form['new_email']
-        current_user.email = new_email
-        connection = engine.connect()
-        Session = sessionmaker(bind=connection)
-        session = Session()
-
-        try:
-            session.merge(current_user)  
-            session.commit()
-        except Exception as e:
-            session.rollback()
-            print(f"Error updating email: {e}")
-            return {"message": "Error updating email"}
-
-        session.close()  
-        return redirect('/banking')
-    else:
-        return {"message": "Unauthorized"}
     
 @users_routes.route("/login/<int:user_id>", methods=['PUT'])
 def update_user(user_id):

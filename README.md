@@ -1,3 +1,4 @@
+# Milestone 4
 # Secure and Intuitive Flask API for Banking Application
 
 This project aims to create a secure and intuitive Flask API for a banking application. The API offers features for account management, transactions, security protocols, and user authentication. 
@@ -49,11 +50,5 @@ This project aims to create a secure and intuitive Flask API for a banking appli
 - description (VARCHAR(255)): Optional description of the transaction.
 - created_at (DATETIME): Timestamp of transaction creation.
 
-## Additional Notes
-
-- Implement appropriate error handling and validation for each endpoint.
-- Use HTTP status codes to indicate success, failure, or specific error conditions.
-- Ensure secure transaction processing and user authentication.
-- Consider implementing additional features such as budget management, bill payments, and investment management for advanced functionality.
 
 

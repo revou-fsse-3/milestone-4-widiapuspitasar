@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 import os
 from dotenv import load_dotenv
 from flask import Flask
@@ -8,7 +8,8 @@ from controllers.user import users_routes
 from controllers.account import accounts_routes
 from controllers.transaction import transaction_routes
 from flask_login import LoginManager
-from connectors.mysql_connector import connection, engine
+
+from connectors.mysql_connector import  engine
 from flask_jwt_extended import JWTManager
 
 load_dotenv()
@@ -36,4 +37,4 @@ app.register_blueprint(transaction_routes)
 
 @app.route("/")
 def hello():
-    return "hello world"
+    return render_template("user/home.html")

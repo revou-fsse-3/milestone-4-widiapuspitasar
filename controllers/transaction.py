@@ -20,14 +20,14 @@ def create_transaction_deposit():
         amount = request.form.get('amount')
 
         if not to_account_id or not amount:
-            raise ValueError("Mohon untuk mengisi 'to_account_id' dan 'amount'")
+            raise ValueError("Please fill in 'to_account_id' and 'amount'")
         
         new_deposit_transaction = Transaction(
             from_account_id=from_account_id,  
             to_account_id=to_account_id,
             amount=amount,
             type='deposit',
-            description='pengiriman dana'
+            description='sending funds'
         )
 
         session.add(new_deposit_transaction)
@@ -35,7 +35,7 @@ def create_transaction_deposit():
 
         return api_response(
             status_code=201,
-            message="Pembuatan data transaksi deposit berhasil diinput",
+            message="Deposit transaction data creation was successful",
             data={
                 "id": new_deposit_transaction.id,
                 "from_account_id": new_deposit_transaction.from_account_id,
@@ -49,7 +49,7 @@ def create_transaction_deposit():
     
     except Exception as e:
         return jsonify({
-            'error': 'Gagal membuat transaksi deposit',
+            'error': 'Failed to make a deposit transaction',
             'message': str(e)
         }), 500
     
@@ -69,14 +69,14 @@ def create_transaction_withdrawal():
         amount = request.form.get('amount')
 
         if not to_account_id or not amount:
-            raise ValueError("Mohon untuk mengisi 'to_account_id' dan 'amount'")
+            raise ValueError("Please fill in 'to_account_id' and 'amount'")
         
         new_withdrawal_transaction = Transaction(
             from_account_id=from_account_id,  
             to_account_id=to_account_id,
             amount=amount,
             type='withdrawal',
-            description='Pengembalian Dana'
+            description='Refund'
         )
 
         session.add(new_withdrawal_transaction)
@@ -84,7 +84,7 @@ def create_transaction_withdrawal():
 
         return api_response(
             status_code=201,
-            message="Pembuatan data transaksi withdrawal berhasil diinput",
+            message="The withdrawal transaction data has been entered successfully",
             data={
                 "id": new_withdrawal_transaction.id,
                 "from_account_id": new_withdrawal_transaction.from_account_id,
@@ -98,7 +98,7 @@ def create_transaction_withdrawal():
     
     except Exception as e:
         return jsonify({
-            'error': 'Gagal membuat transaksi withdrawal',
+            'error': 'Failed to make a withdrawal transaction',
             'message': str(e)
         }), 500
     
@@ -118,14 +118,14 @@ def create_transaction_transfer():
         amount = request.form.get('amount')
 
         if not to_account_id or not amount:
-            raise ValueError("Mohon untuk mengisi 'to_account_id' dan 'amount'")
+            raise ValueError("Please fill in 'to_account_id' and 'amount'")
         
         new_transfer_transaction = Transaction(
             from_account_id=from_account_id,  
             to_account_id=to_account_id,
             amount=amount,
             type='transfer',
-            description='Transfer Dana'
+            description='Transfer of funds'
         )
 
         session.add(new_transfer_transaction)
@@ -133,7 +133,7 @@ def create_transaction_transfer():
 
         return api_response(
             status_code=201,
-            message="Pembuatan data transaksi withdrawal berhasil diinput",
+            message="The withdrawal transaction data has been entered successfully",
             data={
                 "id": new_transfer_transaction.id,
                 "from_account_id": new_transfer_transaction.from_account_id,
@@ -147,7 +147,7 @@ def create_transaction_transfer():
     
     except Exception as e:
         return jsonify({
-            'error': 'Gagal membuat transaksi transfer',
+            'error': 'Failed to create a transfer transaction',
             'message': str(e)
         }), 500
     
@@ -196,7 +196,7 @@ def get_transaction_by_id(transaction_id):
             return jsonify(transaction.serialize(full=True))
         else:
             return jsonify({
-                'message': 'Account belum terdaftar di sistem'
+                'message': 'The account has not been registered in the system'
             }), 404
         
     except Exception as e:

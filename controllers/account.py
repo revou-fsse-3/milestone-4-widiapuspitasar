@@ -30,7 +30,7 @@ def create_account():
 
         return api_response(
             status_code=201,
-            message="Pembuatan data akun baru berhasil diinput",
+            message="The creation of new account data has been entered successfully",
             data={
                 "id": new_account.id,
                 "user_id": new_account.user_id,
@@ -160,7 +160,7 @@ def delete_account(id):
         session.commit()
         return api_response(
                 status_code=200,
-                message="Data akun berhasil dihapus",
+                message="Account data has been successfully deleted",
                 data={
                 "id": account_delete.id,
                 "user_id": account_delete.user_id,
